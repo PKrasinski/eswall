@@ -1,15 +1,15 @@
-import { AddElementCommand } from "../../src/commands"
+import { AddElementsCommand } from "../../src/commands"
 import { Wall } from "../../src/core"
 import { Note } from "../../src/elements"
 import { Position, WallElementId } from "../../src/value_objects"
 
-describe('AddElementCommand', () => {
+describe('AddElementsCommand', () => {
     it('should be able to execute', () => {
         // given
         const wall = new Wall([])
         const id = new WallElementId('id')
         const note = new Note(id, new Position(0, 0))
-        const command = new AddElementCommand(note)
+        const command = new AddElementsCommand([note])
         // when
         command.execute(wall)        
         // then 
@@ -20,7 +20,7 @@ describe('AddElementCommand', () => {
         const wall = new Wall([])
         const id = new WallElementId('id')
         const note = new Note(id, new Position(0, 0))
-        const command = new AddElementCommand(note)
+        const command = new AddElementsCommand([note])
         // when
         command.execute(wall)  
         command.undo(wall)      

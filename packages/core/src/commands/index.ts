@@ -1,2 +1,2 @@
 export * from './Command'
-export * from './AddElementCommand'
+export * from './AddElementsCommand'
