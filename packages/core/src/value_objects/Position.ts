@@ -1,6 +1,13 @@
 export class Position {
     constructor(
-        x: Number,
-        y: Number
+        protected x: number,
+        protected y: number
     ) { }
+
+    yToNumber(): number {
+        return this.y
+    }
+    xToNumber(): number {
+        return this.x
+    }
 }

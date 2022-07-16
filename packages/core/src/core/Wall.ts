@@ -1,5 +1,5 @@
 import { WallElement } from "../elements"
-import { WallElementId } from "../value_objects"
+import { Position, WallElementId } from "../value_objects"
 
 export class Wall {
     constructor(
@@ -18,5 +18,12 @@ export class Wall {
 
     findElementById(id: WallElementId): WallElement | null {
         return this.elements.find(element => element.idEqual(id)) || null
+    }
+
+    moveElement(id: WallElementId, newPosition: Position) : Position {
+        const element = this.findElementById(id)
+        if (!element) throw new Error('Element not founded')
+        const oldPosition = element.move(newPosition)
+        return oldPosition
     }
 }

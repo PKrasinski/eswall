@@ -10,4 +10,20 @@ export class WallElement {
     idEqual(id: WallElementId): boolean {
         return this.id.equal(id)
     }
+
+
+    getPosX(): number {
+        return this.position.xToNumber()
+    }
+
+
+    getPosY(): number {
+        return this.position.yToNumber()
+    }
+
+    move(newPosition: Position) : Position {
+        const oldPosition = this.position
+        this.position = newPosition
+        return oldPosition
+    }
 }
