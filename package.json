@@ -1,0 +1,12 @@
+{
+    "name": "eswall",
+    "version": "1.0.0",
+    "main": "index.js",
+    "author": "Przemysław Krasiński",
+    "private": true,
+    "workspaces": [
+        "applications/**/*",
+        "packages/**/*"
+    ]
+}
+  
