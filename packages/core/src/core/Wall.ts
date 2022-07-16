@@ -10,8 +10,10 @@ export class Wall {
         this.elements.push(element)
     }
 
-    removeElement(id: WallElementId) {
-        this.elements = this.elements.filter(element => !element.idEqual(id))
+    removeElement(id: WallElementId) : WallElement {
+        const index = this.elements.findIndex(element => !element.idEqual(id))
+        const element = this.elements.splice(index, 1)[0]
+        return element
     }
 
     findElementById(id: WallElementId): WallElement | null {
