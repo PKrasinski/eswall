@@ -17,6 +17,7 @@ export class RemoveElementsCommand implements Command {
     }
     undo (wall: Wall) : Result {
         this.removedElements.forEach(element => wall.addElement(element))
+        this.removedElements = []
         return Result.success()
     }
 }
