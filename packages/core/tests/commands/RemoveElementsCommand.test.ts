@@ -1,13 +1,13 @@
 import { RemoveElementsCommand } from "../../src/commands"
 import { Wall } from "../../src/core"
 import { Note } from "../../src/elements"
-import { Position, WallElementId } from "../../src/value_objects"
+import { WallElementId } from "../../src/value_objects"
 
 describe('RemoveElementsCommand', () => {
     it('should be able to execute', () => {
         // given
         const id = new WallElementId('id')
-        const note = new Note(id, new Position(0, 0))
+        const note = new Note(id, { content: '', position: { x: 0, y: 0 } })
         const wall = new Wall([note])
         const command = new RemoveElementsCommand([id])
         // when
@@ -18,7 +18,7 @@ describe('RemoveElementsCommand', () => {
     it('should be able to undo', () => {
         // given
         const id = new WallElementId('id')
-        const note = new Note(id, new Position(0, 0))
+        const note = new Note(id, { content: '', position: { x: 0, y: 0 } })
         const wall = new Wall([note])
         const command = new RemoveElementsCommand([id])
         // when

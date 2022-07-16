@@ -1,5 +1,7 @@
-import { WallElement } from "./WallElement";
+import { WallElement, WallElementProperties } from "./WallElement";
 
-export class Note extends WallElement {
-
+export type NoteProperties = WallElementProperties & {
+    content: string
 }
+
+export class Note extends WallElement<NoteProperties> {}

@@ -1,10 +1,16 @@
-import { Position } from "../value_objects";
 import { WallElementId } from "../value_objects";
 
-export class WallElement {
+export type WallElementProperties = {
+    position: {
+        x: number,
+        y: number,
+    }
+} 
+
+export class WallElement <Properties extends WallElementProperties = WallElementProperties> {
     constructor(
         public id: WallElementId,
-        private position: Position
+        protected properties: Properties
     ) { }
 
     idEqual(id: WallElementId): boolean {
@@ -13,17 +19,17 @@ export class WallElement {
 
 
     getPosX(): number {
-        return this.position.xToNumber()
+        return this.properties.position.x
     }
 
 
     getPosY(): number {
-        return this.position.yToNumber()
+        return this.properties.position.y
     }
 
-    move(newPosition: Position) : Position {
-        const oldPosition = this.position
-        this.position = newPosition
-        return oldPosition
+    changeProperties(newProperties: Properties): Properties {
+        const oldProperties = this.properties
+        this.properties = newProperties
+        return oldProperties
     }
 }

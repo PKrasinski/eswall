@@ -1,16 +1,17 @@
-import { MoveElementsCommand } from "../../src/commands"
+import { ChangeElementsPropertiesCommand } from "../../src/commands"
 import { Wall } from "../../src/core"
-import { Note } from "../../src/elements"
-import { Position, WallElementId } from "../../src/value_objects"
+import { Note, NoteProperties } from "../../src/elements"
+import { WallElementId } from "../../src/value_objects"
 
-describe('MoveElementsCommand', () => {
+describe('ChangeElementsPropertiesCommand', () => {
     it('should be able to execute', () => {
         // given
         const id = new WallElementId('id')
-        const note = new Note(id, new Position(0, 0))
+        const properties = { content: '', position: { x: 0, y: 0 } }
+        const note = new Note(id, properties)
         const wall = new Wall([note])
-        const command = new MoveElementsCommand([
-            [id, new Position(10, 15)]
+        const command = new ChangeElementsPropertiesCommand<NoteProperties>([
+            [id, { content: '', position: { x: 10, y: 15 } }]
         ])
         // when
         command.execute(wall)        
@@ -23,10 +24,11 @@ describe('MoveElementsCommand', () => {
     it('should be able to undo', () => {
         // given
         const id = new WallElementId('id')
-        const note = new Note(id, new Position(0, 0))
+        const properties = { content: '', position: { x: 0, y: 0 } }
+        const note = new Note(id, properties)
         const wall = new Wall([note])
-        const command = new MoveElementsCommand([
-            [id, new Position(10, 15)]
+        const command = new ChangeElementsPropertiesCommand<NoteProperties>([
+            [id, { content: '', position: { x: 10, y: 15 } }]
         ])
         // when
         command.execute(wall)        
