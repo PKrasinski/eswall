@@ -4,4 +4,12 @@ export class Result {
     }
 
     constructor (private error: string | null) {}
+
+    isSuccess() : boolean {
+        return !this.error
+    }
+
+    isError() : boolean {
+        return !!this.error
+    }
 }
