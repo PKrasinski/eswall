@@ -1,13 +1,13 @@
 import { Application, Note, WallElement } from "@eswall/core";
 import Konva from "konva";
+import { Wall } from "../Wall";
 import { CanvasElement } from "./CanvasElement";
 import { CanvasNote } from "./CanvasNote";
 
 export class CanvasElementFactory {
     constructor (
         private app : Application,
-        private stage : Konva.Stage,
-        private layer : Konva.Layer
+        private wall : Wall
     ) { }
 
     build (element: WallElement) : CanvasElement<any> {
@@ -16,6 +16,6 @@ export class CanvasElementFactory {
     }
 
     private buildNote(note: Note) {
-        return new CanvasNote(this.app, this.stage, this.layer, note)
+        return new CanvasNote(this.app, this.wall, note)
     }
 }
