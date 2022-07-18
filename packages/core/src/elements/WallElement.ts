@@ -1,3 +1,4 @@
+import { Publisher, PublisherEvent } from "../shared/ObserverPattern";
 import { WallElementId } from "../value_objects";
 
 export type WallElementProperties = {
@@ -7,11 +8,13 @@ export type WallElementProperties = {
     }
 } 
 
-export class WallElement <Properties extends WallElementProperties = WallElementProperties> {
+export class PropertiesChangedEvent extends PublisherEvent {}
+
+export class WallElement <Properties extends WallElementProperties = WallElementProperties> extends Publisher {
     constructor(
         public id: WallElementId,
         protected properties: Properties
-    ) { }
+    ) { super() }
 
     idEqual(id: WallElementId): boolean {
         return this.id.equal(id)
@@ -33,6 +36,7 @@ export class WallElement <Properties extends WallElementProperties = WallElement
     changeProperties(newProperties: Properties): Properties {
         const oldProperties = this.properties
         this.properties = newProperties
+        this.notify(PropertiesChangedEvent)
         return oldProperties
     }
 }
