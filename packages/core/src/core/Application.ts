@@ -1,4 +1,5 @@
 import { Command } from "../commands";
+import { PublisherEvent, PublisherEventCallback } from "../shared/ObserverPattern";
 import { CommandHistory } from "./CommandHistory";
 import { Wall } from "./Wall";
 
@@ -13,10 +14,14 @@ export class Application {
     }
 
     undo() {
-        this.commandHistory.undo(this.wall);
+        this.commandHistory.undo(this.wall)
     }
 
     redo() {
-        this.commandHistory.redo(this.wall);
+        this.commandHistory.redo(this.wall)
+    }
+
+    subscribe <T extends PublisherEvent> (Event : PublisherEvent, callback : PublisherEventCallback<T>) {
+        this.wall.subscribe(Event, callback)
     }
 }
