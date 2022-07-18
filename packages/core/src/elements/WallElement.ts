@@ -17,6 +17,9 @@ export class WallElement <Properties extends WallElementProperties = WallElement
         return this.id.equal(id)
     }
 
+    getProperties(): Properties {
+        return JSON.parse(JSON.stringify(this.properties))
+    }
 
     getPosX(): number {
         return this.properties.position.x
