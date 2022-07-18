@@ -31,10 +31,22 @@ export class Wall {
     }
 
     private stageWheelHandler (event: KonvaEventObject<WheelEvent>) {
-        const scaleBy = 1.15
-        
         event.evt.preventDefault()
 
+        if (event.evt.ctrlKey) this.zoomUsingWheel(event)
+        else this.moveStageUsingWheel(event)       
+    }
+
+    private moveStageUsingWheel(event: KonvaEventObject<WheelEvent>) {
+        const newPos = {
+            x: this.stage.x() - event.evt.deltaX,
+            y: this.stage.y() - event.evt.deltaY
+        }
+        this.stage.position(newPos)
+    }
+
+    private zoomUsingWheel (event: KonvaEventObject<WheelEvent>) {
+        const scaleBy = 1.15
         const oldScale = this.stage.scaleX()
         const pointer = this.stage.getPointerPosition()
 
@@ -45,11 +57,7 @@ export class Wall {
             y: (pointer.y - this.stage.y()) / oldScale
         }
 
-        let direction = event.evt.deltaY > 0 ? 1 : -1
-
-        if (event.evt.ctrlKey) {
-            direction = -direction
-        }
+        const direction = event.evt.deltaY > 0 ? -1 : 1
 
         const newScale = direction > 0 ? oldScale * scaleBy : oldScale / scaleBy
 
