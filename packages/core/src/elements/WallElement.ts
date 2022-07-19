@@ -24,15 +24,6 @@ export class WallElement <Properties extends WallElementProperties = WallElement
         return JSON.parse(JSON.stringify(this.properties))
     }
 
-    getPosX(): number {
-        return this.properties.position.x
-    }
-
-
-    getPosY(): number {
-        return this.properties.position.y
-    }
-
     changeProperties(newProperties: Properties): Properties {
         const oldProperties = this.properties
         this.properties = newProperties
