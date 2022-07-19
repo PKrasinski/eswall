@@ -35,12 +35,23 @@ export class CanvasNote extends CanvasElement<Note> {
         this.add(this.textNode);
         this.wall.addToLayer(this)
 
-        this.on('dblclick dbltap', this.doubleClickHandler.bind(this))
+        this.on('click', this.clickHandler.bind(this))
         this.on('dragend', this.dragEndHandler.bind(this))
     }
 
     propertiesChangedHandler() {
         this.setProperties()
+    }
+    
+    click () {
+        this.clickHandler()
+    }
+
+    private clickHandler () {
+        this.wall.selectedElementsWrapper.select([this])
+        setTimeout(() => {
+            this.addContentEditableArea();
+        })
     }
 
     private setProperties() {
@@ -59,12 +70,6 @@ export class CanvasNote extends CanvasElement<Note> {
         this.app.executeCommand(new ChangeElementsPropertiesCommand([
             [this.element.id, newProperties]
         ]))
-    }
-
-    private doubleClickHandler () {
-        setTimeout(() => {
-            this.addContentEditableArea();
-        })
     }
 
     private addContentEditableArea() {

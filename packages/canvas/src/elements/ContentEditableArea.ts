@@ -11,13 +11,13 @@ export class ContentEditableArea extends HTMLDivElement {
 
     connectedCallback() {
         this.addEventListener('keydown', this.keydownHandler.bind(this))
-        window.addEventListener('click', this.outsideClickHandlerFn)
+        window.addEventListener('mousedown', this.outsideClickHandlerFn)
         this.setCaretOnTheEndOfDiv()
     }
 
     remove() {
         this.dispatchEvent(new CustomEvent('beforeRemove'))
-        window.removeEventListener('click', this.outsideClickHandlerFn)
+        window.removeEventListener('mousedown', this.outsideClickHandlerFn)
 
         super.remove()
     }

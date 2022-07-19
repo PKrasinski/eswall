@@ -1,7 +1,9 @@
 import { Application, NewElementEvent, RemoveElementEvent } from "@eswall/core";
 import Konva from "konva";
+import { IRect, Vector2d } from "konva/lib/types";
 import { CanvasElement } from "./elements/CanvasElement";
 import { CanvasElementFactory } from "./elements/ElementFactory";
+import { Wall } from "./Wall";
 
 export class WallElementsManager {
     elements : Array<CanvasElement<any>> = []
@@ -9,10 +11,9 @@ export class WallElementsManager {
 
     constructor(
         app: Application,
-        stage: Konva.Stage,
-        layer: Konva.Layer
+        wall: Wall
     ) {
-        this.factory = new CanvasElementFactory(app, stage, layer)
+        this.factory = new CanvasElementFactory(app, wall)
         app.subscribe(NewElementEvent, this.newElementEventHandler.bind(this))
         app.subscribe(RemoveElementEvent, this.removeElementEventHandler.bind(this))
     }
@@ -27,5 +28,24 @@ export class WallElementsManager {
         if (index === -1) return
         const element = this.elements.splice(index, 1)[0]
         element.remove()
+    }
+
+    findElementsWithIntersection(rect: IRect) : Array<CanvasElement<any>> {
+        return this.elements.filter((canvasElement) =>
+            Konva.Util.haveIntersection(rect, canvasElement.getClientRect())
+        )
+    }
+
+    clickElementOnPosition (position: Vector2d) {
+        const element = this.elements.find(element => {
+            const { x, y, width, height } = element.getClientRect()
+
+            if (x > position.x) return false
+            if (y > position.y) return false
+            if ((x + width) < position.x) return false
+            if ((y + height) < position.y) return false
+            return true
+        })
+        element?.click()
     }
 }

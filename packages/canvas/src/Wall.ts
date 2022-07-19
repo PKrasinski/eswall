@@ -1,12 +1,15 @@
 import { Application } from "@eswall/core"
 import Konva from 'konva'
-import { Group } from "konva/lib/Group"
-import { KonvaEventObject } from "konva/lib/Node"
+import { KonvaEventObject, Node } from "konva/lib/Node"
+import { SelectionRectangle } from "./SelectionReactangle"
+import { SelectedElementsWrapper } from "./SelectedElementsWrapper"
 import { WallElementsManager } from "./WallElementsManager"
 
 export class Wall extends Konva.Stage {
     layer : Konva.Layer
     elementsManager : WallElementsManager
+    selectedElementsWrapper : SelectedElementsWrapper
+    selectionArea : SelectionRectangle
 
     constructor(container: HTMLDivElement, private app: Application) {
         super({
@@ -17,13 +20,28 @@ export class Wall extends Konva.Stage {
 
         this.layer = new Konva.Layer()
         this.add(this.layer)
+
+        this.selectedElementsWrapper = new SelectedElementsWrapper(this, app)
+        this.selectionArea = new SelectionRectangle(this, this.selectedElementsWrapper)
+
         this.elementsManager = new WallElementsManager(app, this)
 
         this.on('wheel', this.wheelHandler.bind(this))
     }
 
-    public addToLayer (element: Group) {
-        return this.layer.add(element)
+    public addToLayer (element: Konva.Node) {
+        return this.layer.add(element as any)
+    }
+
+
+    public getPointerAbsolutePosition() : { x: number, y: number } {
+        const position = { x: 0, y: 0 }
+        const pointerPosition = this.getPointerPosition()
+        
+        if (pointerPosition?.x) position.x = (pointerPosition.x - this.x()) / this.scaleX()
+        if (pointerPosition?.y) position.y = (pointerPosition.y - this.y()) / this.scaleX()
+
+        return position
     }
 
     private wheelHandler (event: KonvaEventObject<WheelEvent>) {

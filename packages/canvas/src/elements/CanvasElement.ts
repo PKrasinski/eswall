@@ -16,8 +16,17 @@ export abstract class CanvasElement <T extends WallElement> extends Konva.Group 
 
     abstract createKonvaElement () : void
     abstract propertiesChangedHandler () : void
+    abstract click () : void
 
     equal (id: WallElementId) {
         return this.element.idEqual(id)
+    }
+
+    getId ()  {
+        return this.element.id
+    }
+
+    getProperties ()  {
+        return this.element.getProperties()
     }
 }
