@@ -23,7 +23,7 @@ export class Wall extends Publisher {
     }
 
     removeElement(id: WallElementId) : WallElement {
-        const index = this.elements.findIndex(element => !element.idEqual(id))
+        const index = this.elements.findIndex(element => element.idEqual(id))
         const element = this.elements.splice(index, 1)[0]
         this.notify(new RemoveElementEvent(element))
         return element

@@ -28,4 +28,19 @@ describe('AddElementsCommand', () => {
         // then 
         expect(wall.findElementById(id)).toBe(null)
     })
+    it('after undo should remove correct object', () => {
+        // given
+        const wall = new Wall([])
+        const note = new NoteBuilder().build()
+        const note2 = new NoteBuilder().build()
+        const command1 = new AddElementsCommand([note])
+        const command2 = new AddElementsCommand([note2])
+        // when
+        command1.execute(wall)  
+        command2.execute(wall)  
+        command2.undo(wall)      
+        // then 
+        expect(wall.findElementById(note.id)).toBe(note)
+        expect(wall.findElementById(note2.id)).toBe(null)
+    })
 })
