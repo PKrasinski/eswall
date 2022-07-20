@@ -2,7 +2,6 @@ import { ChangeElementsPropertiesCommand, Note } from "@eswall/core";
 import Konva from "konva";
 import { CanvasElement } from "./CanvasElement";
 import { ContentEditableArea } from "./ContentEditableArea";
-import { ContentEditableAreaBuilder } from "./ContentEditableAreaBuilder";
 
 export class CanvasNote extends CanvasElement<Note> {
     private rect !: Konva.Rect
@@ -75,19 +74,7 @@ export class CanvasNote extends CanvasElement<Note> {
     private addContentEditableArea() {
         this.textNode.hide();
 
-        const textPosition = this.textNode.absolutePosition();
-
-        this.contentEditableArea = new ContentEditableAreaBuilder()
-            .innerText(this.textNode.text())
-            .top(this.wall.container().offsetTop + textPosition.y)
-            .left(this.wall.container().offsetLeft + textPosition.x)
-            .fontSize(this.textNode.fontSize())
-            .lineHeight(this.textNode.lineHeight())
-            .fontFamily(this.textNode.fontFamily())
-            .textAlign(this.textNode.align())
-            .color(this.textNode.fill())
-            .scale(this.wall.scale().x)
-            .build();
+        this.contentEditableArea = ContentEditableArea.create(this.wall, this.textNode)
 
         this.contentEditableArea.addEventListener('beforeRemove', this.contentEditableAreaRemovedHandler.bind(this))
         this.contentEditableArea.addEventListener('contentChanged', this.contentEditableAreaContentChangedHandler.bind(this))
