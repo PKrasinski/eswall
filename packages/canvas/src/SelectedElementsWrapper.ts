@@ -137,7 +137,9 @@ export class SelectedElementsWrapper extends Konva.Rect {
     }
 
     private clearSelect() {
-        this.elements.forEach(this.removeElement.bind(this))
+        while (this.elements.length > 0) {
+            this.removeElement(this.elements[0])
+        }
         this.applyStyles()
     }
 }
