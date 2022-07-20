@@ -1,4 +1,4 @@
-import { Application, NewElementEvent, RemoveElementEvent } from "@eswall/core";
+import { Application, NewElementEvent, RemoveElementEvent, WallElementId } from "@eswall/core";
 import Konva from "konva";
 import { IRect, Vector2d } from "konva/lib/types";
 import { CanvasElement } from "./elements/CanvasElement";
@@ -11,7 +11,7 @@ export class WallElementsManager {
 
     constructor(
         app: Application,
-        wall: Wall
+        private wall: Wall
     ) {
         this.factory = new CanvasElementFactory(app, wall)
         app.subscribe(NewElementEvent, this.newElementEventHandler.bind(this))
@@ -23,11 +23,15 @@ export class WallElementsManager {
         this.elements.push(element)
     }
 
-    removeElementEventHandler (event: NewElementEvent) {
+    removeElementEventHandler (event: RemoveElementEvent) {
         const index = this.elements.findIndex(element => element.equal(event.element.id))
         if (index === -1) return
         const element = this.elements.splice(index, 1)[0]
         element.remove()
+    }
+
+    findElementById (id: WallElementId) {
+        return this.elements.find(element => element.equal(id))
     }
 
     findElementsWithIntersection(rect: IRect) : Array<CanvasElement<any>> {
