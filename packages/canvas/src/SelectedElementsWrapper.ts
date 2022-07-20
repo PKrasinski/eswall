@@ -1,4 +1,4 @@
-import { Application, ChangeElementsPropertiesCommand, Note, WallElementId, WallElementProperties } from "@eswall/core"
+import { Application, ChangeElementPropertiesEvent, ChangeElementsPropertiesCommand, RemoveElementEvent, WallElementId, WallElementProperties } from "@eswall/core"
 import Konva from "konva"
 import { KonvaEventObject } from "konva/lib/Node"
 import { Vector2d } from "konva/lib/types"
@@ -24,7 +24,62 @@ export class SelectedElementsWrapper extends Konva.Rect {
         this.on('dragend', this.dragEndHandler.bind(this))
         this.on('click', this.clickHandler.bind(this))
 
+        app.subscribe(RemoveElementEvent, this.removeElementEventHandler.bind(this))
+        app.subscribe(ChangeElementPropertiesEvent, this.propertiesChangedEventHandler.bind(this))
+
         wall.addToLayer(this)
+    }
+
+    select (elements: CanvasElement<any>[]) {
+        this.clearSelect()
+
+        elements.forEach(this.addElement.bind(this))
+
+        this.applyStyles()
+    }
+
+    deselectElement (element: CanvasElement<any>) {
+        this.removeElement(element)
+        this.applyStyles()
+    }
+
+    private removeElementEventHandler (event: RemoveElementEvent) {
+        const element = this.wall.elementsManager.findElementById(event.element.id)
+        if (!element) return 
+
+        this.deselectElement(element)
+    }
+
+    private propertiesChangedEventHandler () {
+        this.applyStyles()
+    }
+
+    private addElement (element: CanvasElement<any>) {
+        element.draggable(false)
+        this.elements.push(element)
+        this.elements
+    }
+
+    private removeElement (element: CanvasElement<any>) {
+        const index = this.elements.indexOf(element)
+        if (index === -1) return
+
+        element.draggable(true)
+        this.elements.splice(index, 1)
+    }
+
+    private applyStyles() {
+        if (this.elements.length === 0) {
+            this.visible(false)
+        }
+        else {
+            const rect = getWrapperRect(this.wall, this.elements, 2)
+    
+            this.setAttrs(rect)
+    
+            this.moveToTop()
+            this.visible(true)
+        }
     }
 
     private dragStartHandler () {
@@ -82,26 +137,7 @@ export class SelectedElementsWrapper extends Konva.Rect {
     }
 
     private clearSelect() {
-        this.elements.forEach(node => {
-            node.draggable(true)
-        })
-        this.elements = []
-
-        this.visible(false)
-    }
-
-    select (elements: CanvasElement<any>[]) {
-        this.clearSelect()
-
-        elements.forEach(element => element.draggable(false))
-
-        const rect = getWrapperRect(this.wall, elements, 2)
-
-        this.setAttrs(rect)
-
-        this.moveToTop()
-        this.visible(true)
-
-        this.elements = elements
+        this.elements.forEach(this.removeElement.bind(this))
+        this.applyStyles()
     }
 }
