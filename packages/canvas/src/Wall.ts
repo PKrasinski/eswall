@@ -1,17 +1,18 @@
 import { Application } from "@eswall/core"
 import Konva from 'konva'
-import { KonvaEventObject, Node } from "konva/lib/Node"
 import { SelectionRectangle } from "./SelectionReactangle"
 import { SelectedElementsWrapper } from "./SelectedElementsWrapper"
 import { WallElementsManager } from "./WallElementsManager"
+import { getWrapperRect } from "./utils/getWrapperRect"
+import { addMetadataFromBase64DataURI } from 'meta-png'
 
 export class Wall extends Konva.Stage {
     layer : Konva.Layer
-    elementsManager : WallElementsManager
-    selectedElementsWrapper : SelectedElementsWrapper
-    selectionArea : SelectionRectangle
+    elementsManager !: WallElementsManager
+    selectedElementsWrapper !: SelectedElementsWrapper
+    selectionArea !: SelectionRectangle
 
-    constructor(container: HTMLDivElement, private app: Application) {
+    constructor (app: Application, container: HTMLDivElement) {
         super({
             container,
             width: container.offsetWidth,
@@ -22,9 +23,8 @@ export class Wall extends Konva.Stage {
         this.add(this.layer)
 
         this.selectedElementsWrapper = new SelectedElementsWrapper(this, app)
-        this.selectionArea = new SelectionRectangle(this, this.selectedElementsWrapper)
-
         this.elementsManager = new WallElementsManager(app, this)
+        this.selectionArea = new SelectionRectangle(this, this.selectedElementsWrapper)
 
         this.container().addEventListener('wheel', this.wheelHandler.bind(this))
     }
@@ -84,5 +84,24 @@ export class Wall extends Konva.Stage {
         }
         this.position(newPos)
         this.fire('zoom')
+    }
+
+    toPNGDataURL () : string {
+        const oldScale = this.scaleX()
+        this.scale({ x: 1, y: 1 })
+
+        const rect = getWrapperRect(this, this.elementsManager.elements, 20)
+
+        const dataURL = this.toDataURL({ 
+            pixelRatio: 2,
+            x: rect.x + this.position().x,
+            y: rect.y + this.position().y,
+            width: rect.width,
+            height: rect.height
+        })
+
+        this.scale({ x: oldScale, y: oldScale })
+
+        return dataURL
     }
 }
