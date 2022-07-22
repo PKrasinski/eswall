@@ -3,6 +3,7 @@ import Konva from "konva";
 import { CanvasElement } from "./CanvasElement";
 import { ContentEditableArea } from "./ContentEditableArea";
 import Values from 'values.js'
+import { FontSizeCalculator } from "../utils/FontSizeCalculator";
 
 export class CanvasNote extends CanvasElement<Note> {
     private rect !: Konva.Rect
@@ -62,6 +63,7 @@ export class CanvasNote extends CanvasElement<Note> {
     private setProperties() {
         const properties = this.element.getProperties()
         this.textNode.text(properties.content)
+        this.textNode.fontSize(new FontSizeCalculator(this.textNode).getMaxFontSize())
         this.rect.fillLinearGradientColorStops([0, properties.background, 1, new Values(properties.background).tint(10).hexString()])
         this.x(properties.position.x)
         this.y(properties.position.y)

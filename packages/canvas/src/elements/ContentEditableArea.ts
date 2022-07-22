@@ -1,4 +1,5 @@
 import Konva from "konva"
+import { FontSizeCalculator } from "../utils/FontSizeCalculator"
 import { Wall } from "../Wall"
 
 export class ContentEditableArea extends HTMLDivElement {
@@ -18,6 +19,7 @@ export class ContentEditableArea extends HTMLDivElement {
 
     private wall !: Wall
     private node !: Konva.Text
+    private calculator !: FontSizeCalculator
     private outsideClickHandlerFn : (event: any) => void
 
     constructor(
@@ -37,11 +39,13 @@ export class ContentEditableArea extends HTMLDivElement {
 
     setNode (node: Konva.Text) {
         this.node = node
+        this.calculator = new FontSizeCalculator(this.node)
         return this
     }
 
     connectedCallback() {
         this.addEventListener('keydown', this.keydownHandler.bind(this))
+        this.addEventListener('input', this.changeHandler.bind(this))
         window.addEventListener('mousedown', this.outsideClickHandlerFn)
         this.setCaretOnTheEndOfDiv()
     }
@@ -72,6 +76,15 @@ export class ContentEditableArea extends HTMLDivElement {
         else if (e.key === 'Escape') {
             this.remove()
         }
+    }
+
+    private changeHandler () {
+        this.setMaxFontSize()
+    }
+
+    private setMaxFontSize () {
+        const fontSize = this.calculator.getMaxFontSize(this.innerText)
+        this.style.fontSize = fontSize + 'px'
     }
 
     private dispatchContentChangedEvent() {
