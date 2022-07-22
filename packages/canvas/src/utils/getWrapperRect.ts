@@ -17,9 +17,9 @@ export function getWrapperRect (wall: Wall, nodes: Konva.Node[], padding: number
     })
 
     return {
-        width: (right - left + padding * 2) / wall.scaleX(),
-        height: (bottom - top + padding * 2) / wall.scaleX(),
-        x: (left - padding - wall.x()) / wall.scaleX(),
-        y: (top - padding - wall.y()) / wall.scaleX()
+        width: (right - left ) / wall.scaleX() + padding * 2,
+        height: (bottom - top) / wall.scaleX() + padding * 2,
+        x: (left - wall.x()) / wall.scaleX() - padding,
+        y: (top - wall.y()) / wall.scaleX() - padding
     }
 }
