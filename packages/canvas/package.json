@@ -20,6 +20,7 @@
     },
     "dependencies": {
         "@eswall/core": "1.0.0",
-        "konva": "^8.3.10"
+        "konva": "^8.3.10",
+        "values.js": "^2.1.1"
     }
 }

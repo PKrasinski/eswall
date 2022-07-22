@@ -2,6 +2,7 @@ import { ChangeElementsPropertiesCommand, Note } from "@eswall/core";
 import Konva from "konva";
 import { CanvasElement } from "./CanvasElement";
 import { ContentEditableArea } from "./ContentEditableArea";
+import Values from 'values.js'
 
 export class CanvasNote extends CanvasElement<Note> {
     private rect !: Konva.Rect
@@ -15,7 +16,12 @@ export class CanvasNote extends CanvasElement<Note> {
             x: 0,
             y: 0,
             width: 160,
-            height: 160
+            height: 160,
+            shadowOffsetY: 6,
+            shadowBlur: 6,
+            shadowOpacity: 0.3,
+            fillLinearGradientStartPoint: { x: 160, y: 0 },
+            fillLinearGradientEndPoint: { x: 0, y: 160 }
         })
         
         this.textNode = new Konva.Text({
@@ -56,7 +62,7 @@ export class CanvasNote extends CanvasElement<Note> {
     private setProperties() {
         const properties = this.element.getProperties()
         this.textNode.text(properties.content)
-        this.rect.fill(properties.background)
+        this.rect.fillLinearGradientColorStops([0, properties.background, 1, new Values(properties.background).tint(10).hexString()])
         this.x(properties.position.x)
         this.y(properties.position.y)
     }
