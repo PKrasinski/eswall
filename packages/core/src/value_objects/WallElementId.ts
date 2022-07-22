@@ -10,4 +10,8 @@ export class WallElementId {
     equal(wallElementId: WallElementId): boolean {
         return this.id === wallElementId.id
     }
+
+    toString () {
+        return this.id
+    }
 }

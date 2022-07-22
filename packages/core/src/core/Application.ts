@@ -5,7 +5,7 @@ import { Wall } from "./Wall";
 
 export class Application {
     constructor(
-        public wall: Wall = new Wall([]),
+        private wall: Wall = new Wall([]),
         private commandHistory: CommandHistory = new CommandHistory()
     ) {}
 
@@ -23,5 +23,13 @@ export class Application {
 
     subscribe <T extends PublisherEvent> (Event : PublisherEvent, callback : PublisherEventCallback<T>) {
         this.wall.subscribe(Event, callback)
+    }
+
+    export(): string {
+        return this.wall.exportElementsToString()
+    }
+
+    import(data: string) {
+        return this.wall.importElementsFromString(data)
     }
 }

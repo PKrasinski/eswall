@@ -1,6 +1,7 @@
 import { WallElement, WallElementProperties } from "../elements"
 import { Publisher, PublisherEvent } from "../shared/ObserverPattern"
 import { WallElementId } from "../value_objects"
+import { Serializer } from "./Serializer"
 
 export class ElementEvent extends PublisherEvent {
     constructor (
@@ -13,9 +14,13 @@ export class RemoveElementEvent extends ElementEvent {}
 export class ChangeElementPropertiesEvent extends ElementEvent {}
 
 export class Wall extends Publisher {
+    serializer: Serializer
     constructor(
         private elements: WallElement[]
-    ) { super() }
+    ) { 
+        super() 
+        this.serializer = new Serializer()
+    }
 
     addElement(element: WallElement) {
         this.elements.push(element)
@@ -39,5 +44,14 @@ export class Wall extends Publisher {
         const oldProperties = element.changeProperties(properties)
         this.notify(new ChangeElementPropertiesEvent(element))
         return oldProperties
+    }
+
+    exportElementsToString() : string {
+        return this.serializer.serialize(this.elements)
+    }
+
+    importElementsFromString(data: string) {
+        const elements = this.serializer.deserialize(data)
+        elements.map(this.addElement.bind(this))
     }
 }
